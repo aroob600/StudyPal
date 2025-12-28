@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<title>StudyPal</title>
+
+<style>
+:root{
+    --green:#1f9d7a;
+    --green-dark:#157a60;
+    --teal:#2bb3a3;
+    --teal-light:#e6f7f4;
+    --white-glass:rgba(255,255,255,0.88);
+}
+
+/* أساسيات */
+*{
+    box-sizing:border-box;
+    font-family:"Cairo", Tahoma, Arial;
+}
+
+body{
+    margin:0;
+    min-height:100vh;
+    background:
+        radial-gradient(circle at 10% 10%, #eafff8, transparent 40%),
+        radial-gradient(circle at 90% 20%, #e0fff8, transparent 45%),
+        linear-gradient(135deg, #f3fffc, #e9f7f3);
+}
+
+/* الهيدر */
+.header{
+    position:fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:110px;
+    background:linear-gradient(135deg, var(--green-dark), var(--teal));
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:0 40px;
+    box-shadow:0 15px 40px rgba(0,0,0,0.25);
+    z-index:999;
+}
+
+/* الشعار */
+.logo{
+    height:85px;
+    filter: drop-shadow(0 8px 18px rgba(0,0,0,0.35));
+}
+
+/* اسم المدرسة */
+.header-title{
+    color:white;
+    text-align:right;
+}
+
+.header-title h3{
+    margin:0;
+    font-size:22px;
+    letter-spacing:0.5px;
+}
+
+.header-title span{
+    font-size:14px;
+    opacity:0.9;
+}
+
+/* المحتوى */
+.main{
+    padding-top:160px;
+    display:flex;
+    justify-content:center;
+}
+
+/* الكرت الرئيسي */
+.container{
+    width:70%;
+    background:var(--white-glass);
+    backdrop-filter: blur(18px);
+    padding:50px;
+    border-radius:30px;
+    box-shadow:
+        0 35px 80px rgba(0,0,0,0.18),
+        inset 0 0 0 1px rgba(255,255,255,0.6);
+    animation:pop 1s ease;
+}
+
+@keyframes pop{
+    from{opacity:0; transform:scale(0.95) translateY(40px);}
+    to{opacity:1; transform:scale(1) translateY(0);}
+}
+
+h1{
+    color:var(--green-dark);
+    font-size:34px;
+    margin-bottom:10px;
+}
+
+.subtitle{
+    font-size:18px;
+    color:#4f746c;
+    margin-bottom:35px;
+}
+
+/* مربع الإدخال */
+textarea{
+    width:100%;
+    height:170px;
+    padding:18px;
+    font-size:17px;
+    border-radius:20px;
+    border:1px solid #bfe7dc;
+    background:#fbfffe;
+    outline:none;
+    transition:0.4s;
+}
+
+textarea:focus{
+    border-color:var(--teal);
+    box-shadow:
+        0 0 0 5px rgba(43,179,163,0.18),
+        inset 0 2px 4px rgba(0,0,0,0.05);
+}
+
+/* الزر */
+button{
+    margin-top:25px;
+    padding:16px 50px;
+    font-size:18px;
+    border:none;
+    border-radius:40px;
+    background:linear-gradient(135deg, var(--teal), var(--green));
+    color:white;
+    cursor:pointer;
+    box-shadow:
+        0 15px 35px rgba(31,157,122,0.45);
+    transition:0.35s;
+}
+
+button:hover{
+    transform:translateY(-3px) scale(1.02);
+    box-shadow:
+        0 22px 50px rgba(31,157,122,0.6);
+}
+
+/* النتيجة */
+#result{
+    margin-top:35px;
+    padding:25px;
+    border-radius:22px;
+    background:var(--teal-light);
+    border:1px solid #cfeee6;
+    color:#173f38;
+    line-height:1.9;
+    font-size:16px;
+}
+
+/* الفوتر */
+.footer{
+    margin-top:30px;
+    text-align:center;
+    font-size:14px;
+    color:#6a8f88;
+}
+</style>
+</head>
+
+<body>
+
+<!-- الهيدر -->
+<div class="header">
+    <img src="C:\Users\1\Desktop\لوقو المتقدمة.png" class="logo" alt="شعار مدارس المتقدمة">
+    <div class="header-title">
+        <h3>مدارس شركة المتقدمة</h3>
+        <span>فرع العارض – تعليم يصنع المستقبل</span>
+    </div>
+</div>
+
+<div class="main">
+    <div class="container">
+        <h1>المساعد الذكي للطلاب</h1>
+        <div class="subtitle">
+            تجربة تعليمية متقدمة مدعومة بالذكاء الاصطناعي ✨
+        </div>
+
+        <textarea id="text" placeholder="اكتب سؤالك، ملخص الدرس، أو أي استفسار تعليمي..."></textarea>
+
+        <button onclick="askAI()">🚀 تشغيل الذكاء الاصطناعي</button>
+
+        <div id="result"></div>
+
+        <div class="footer">
+            © مدارس شركة المتقدمة – العارض | منصة تعليمية ذكية
+        </div>
+    </div>
+</div>
+
+<script>
+async function askAI(){
+    let userText=document.getElementById("text").value;
+    let result=document.getElementById("result");
+
+    if(userText.trim()===""){
+        result.innerHTML="⚠️ الرجاء إدخال نص أولاً";
+        return;
+    }
+
+    result.innerHTML="⏳ الذكاء الاصطناعي يعمل الآن...";
+
+    const response=await fetch("https://api.openai.com/v1/chat/completions",{
+        method:"POST",
+        headers:{
+            "Content-Type":"application/json",
+            "Authorization":"Bearer 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"
+        },
+        body:JSON.stringify({
+            model:"gpt-4o-mini",
+            messages:[{role:"user",content:userText}]
+        })
+    });
+
+    let data=await response.json();
+    result.innerHTML=data.choices[0].message.content;
+}
+</script>
+
+</body>
+</html>
